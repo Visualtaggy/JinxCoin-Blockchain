@@ -26,34 +26,30 @@ class Block():
         return update_hash(self.previous_hash, self.number, self.tran, self.nonce)
 
     def __str__(self):
-        return str("Block#: %s\nHash: %s\nPreviousHash%s\nData: %s\nNonce: %s\n" % (self.number, self.hash(), self.previous_hash, self.tran, self.nonce))
+        return str("Block#: %s\nHash: %s\nPreviousHash: %s\nData: %s\nNonce: %s\n" % (self.number, self.hash(), self.previous_hash, self.tran, self.nonce))
 
 
 class JinxChain():
-    difficulty = 4
+    # should be dynamic and increase as the number of clients / users on the blockchain increase!
+    difficulty = 3
 
     def __init__(self, chain=[]):
         self.chain = chain
 
     def add_block(self, block):
-        self.chain.append(
-            {
-                "hash": block.hash(),
-                "previous": block.previous_hash,
-                "number": block.number,
-                "tran": block.tran,
-                "nonce": block.nonce
-            }
-        )
+        self.chain.append(block)
+
+    def remove(self, block):
+        self.chain.remove(block)
 
     def mine_coin(self, block):
         try:
-            block.previous_hash = self.chain[-1].get('hash')
+            block.previous_hash = self.chain[-1].hash()
         except IndexError:
             pass
 
         while True:
-            if block.hash()[:4] == "0" * self.difficulty:
+            if block.hash()[:self.difficulty] == "0" * self.difficulty:
                 self.add_block(block)
                 break
             else:
