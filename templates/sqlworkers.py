@@ -5,11 +5,17 @@ class Table():
     def __init__(self, table_name, *args):
         self.table = table_name
         self.columns = "(%s)" % ",".join(args)
+        self.columnsList = args
 
         if check_newtable(table_name):
-            cursor = mysql.connection.cursor()
-            cursor.execute("CREATE TABLE %s%s" % (self.table, self.columns))
-            cursor.close()
+            create_data = ""
+            for column in self.columnsList:
+                create_data += "%s varchar(100)," % column
+
+            cur = mysql.connection.cursor()
+            cur.execute("CREATE TABLE %s(%s)" %
+                        (self.table, create_data[:len(create_data)-1]))
+            cur.close()
 
     def get_all(self):
         cursor = mysql.connection.cursor()
@@ -27,7 +33,7 @@ class Table():
         cursor.close()
         return data
 
-    def delete_all(self, search, value):
+    def delete_one(self, search, value):
         cursor = mysql.connection.cursor()
         cursor.execute("DELETE from %s where %s = \"%s\"" %
                        (self.table, search, value))
@@ -37,6 +43,11 @@ class Table():
     def delete_all(self):
         self.drop()
         self.__init__(self.table, *self.columnsList)
+
+    def drop(self):
+        cur = mysql.connection.cursor()
+        cur.execute("DROP TABLE %s" % self.table)
+        cur.close()
 
     def insert(self, *args):
         data = ""
@@ -51,7 +62,7 @@ class Table():
 
 
 def check_newtable(table_name):
-    cursor = mysql.connection.curson()
+    cursor = mysql.connection.cursor()
     try:
         result = cursor.execute("SELECT * from %s" % table_name)
         cursor.close()
