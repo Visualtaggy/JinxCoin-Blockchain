@@ -3,6 +3,7 @@ from passlib.hash import sha256_crypt
 from flask_mysqldb import MySQL
 from password import sqlpassword
 from templates.sqlworkers import *
+from templates.forms import *
 
 app = Flask(__name__)
 
@@ -12,6 +13,17 @@ app.config['MYSQL_PASSWORD'] = sqlpassword
 app.config['MYSQL_DB'] = 'crypto'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
+
+
+@app.route("/sign-up", methods=['GET', 'POST'])
+def register():
+    form = SignupForm(request.form)
+    users = Table("users", "name", "email", "username", "password")
+
+    if request.method == 'POST' and form.validate():
+        pass
+
+    return render_template('signup.html', form=form)
 
 
 @app.route("/")
