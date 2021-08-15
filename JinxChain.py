@@ -13,29 +13,65 @@ def update_hash(*args):
 
 
 class Block():
-    data = None
+    tran = None
     hash = None
     nonce = 0
     previous_hash = "0" * 64
 
-    def __init__(self, data, number=0):
-        self.data = data
+    def __init__(self, tran, number=0):
+        self.tran = tran
         self.number = number
 
     def hash(self):
-        return update_hash(self.previous_hash, self.number, self.data, self.nonce)
+        return update_hash(self.previous_hash, self.number, self.tran, self.nonce)
 
     def __str__(self):
-        return str("Block#: %s\nHash: %s\nPreviousHash%s\nData: %s\nNonce: %s\n" % (self.number, self.hash(), self.previous_hash, self.data, self.nonce))
+        return str("Block#: %s\nHash: %s\nPreviousHash%s\nData: %s\nNonce: %s\n" % (self.number, self.hash(), self.previous_hash, self.tran, self.nonce))
 
 
 class JinxChain():
-    pass
+    difficulty = 4
+
+    def __init__(self, chain=[]):
+        self.chain = chain
+
+    def add_block(self, block):
+        self.chain.append(
+            {
+                "hash": block.hash(),
+                "previous": block.previous_hash,
+                "number": block.number,
+                "tran": block.tran,
+                "nonce": block.nonce
+            }
+        )
+
+    def mine_coin(self, block):
+        try:
+            block.previous_hash = self.chain[-1].get('hash')
+        except IndexError:
+            pass
+
+        while True:
+            if block.hash()[:4] == "0" * self.difficulty:
+                self.add_block(block)
+                break
+            else:
+                block.nonce += 1
 
 
 def testCode():
-    block = Block("sending money", 1)
-    print(block)
+    blockchain = JinxChain()
+
+    trans = ['sending money', 'receiving money', 'receiving money']
+
+    idx = 0
+    for tran in trans:
+        idx += 1
+        blockchain.mine_coin(Block(tran, idx))
+
+    for block in blockchain.chain:
+        print(block)
 
 
 if __name__ == '__main__':
