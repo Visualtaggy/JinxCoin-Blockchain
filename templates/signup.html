@@ -1,10 +1,91 @@
-<h1>Register</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <div class="container">
+      <form method="POST" action="">
+        <div class="form-label group">
+          <input
+            type="text"
+            id="inputName"
+            name="name"
+            class="form-control"
+            placeholder="Full Name"
+            required="required"
+            autofocus="autofocus"
+            value="{{request.form.name}}"
+          />
+          <label for="inputName">Full Name</label>
+        </div>
+        <div class="form-label group">
+          <input
+            type="text"
+            id="inputUsername"
+            name="username"
+            class="form-control"
+            placeholder="Username"
+            required="required"
+            autofocus="autofocus"
+            value="{{request.form.username}}"
+          />
+          <label for="inputUserName">Username</label>
+        </div>
+        <div class="form-label group">
+          <input
+            type="text"
+            id="inputEmail"
+            name="email"
+            class="form-control"
+            placeholder="Email"
+            required="required"
+            autofocus="autofocus"
+            value="{{request.form.email}}"
+          />
+          <label for="inputEmail">Email address</label>
+        </div>
+        <div class="form-label group">
+          <input
+            type="password"
+            id="inputPasword"
+            name="password"
+            class="form-control"
+            placeholder="Password"
+            required="required"
+            autofocus="autofocus"
+            value="{{request.form.password}}"
+          />
+          <label for="inputPassword">Password</label>
+        </div>
+        <div class="form-label group">
+          <input
+            type="password"
+            id="confirmPasword"
+            name="confirm"
+            class="form-control"
+            placeholder="Confirm Password"
+            required="required"
+            autofocus="autofocus"
+            value="{{request.form.confirm}}"
+          />
+          <label for="confirmPassword">Confirm Password</label>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">SignUp</button>
+      </form>
+    </div>
+  </body>
+</html>
 
-<form method="POST" action="">
-  <input value="{{request.form.name}}" /><label>Full Name</label>
-  <input value="{{request.form.email}}" /><label>Email</label>
-  <input value="{{request.form.username}}" /><label>Username</label>
-  <input value="{{request.form.password}}" /><label>Password</label>
-  <input value="{{request.form.confirm}}" /><label>Confirm Password</label>
-  <button type="submit">SignUp</button>
-</form>
+<!-- <h1>Register</h1>
+    <form method="POST" action="">
+      <input value="{{request.form.name}}" /><label>Full Name</label>
+      <input value="{{request.form.email}}" /><label>Email</label>
+      <input value="{{request.form.username}}" /><label>Username</label>
+      <input value="{{request.form.password}}" /><label>Password</label>
+      <input value="{{request.form.confirm}}" /><label>Confirm Password</label>
+      <button type="submit">SignUp</button>
+    </form> -->
