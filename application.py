@@ -16,7 +16,14 @@ mysql = MySQL(app)
 
 
 def login_user(username):
-    pass
+    users = Table("users", "name", "email", "username", "password")
+    user = users.get_one("username",username)
+
+    session['logged_in'] = True
+    session['username'] = username
+    session['name'] = user.get('name')
+    session['email'] = user.get('email')
+
 
 @app.route("/sign-up", methods=['GET', 'POST'])
 def register():
@@ -31,7 +38,7 @@ def register():
         name = form.name.data
 
        
-        if True:
+        if isnewuser(username):
             
             password = sha256_crypt.encrypt(form.password.data)
             users.insert(name,email,username,password)
@@ -45,7 +52,7 @@ def register():
 
 @app.route("/dashboard")
 def dashboard():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html',session=session)
 
 @app.route("/")
 def index():
