@@ -1,5 +1,5 @@
 from application import mysql, session
-
+from JinxChain import JinxChain,Block
 
 class Table():
     def __init__(self, table_name, *args):
@@ -78,3 +78,21 @@ def isnewuser(username):
 
     return False if username in usernames else True
 
+
+def get_jinxchain():
+    blockchain = JinxChain()
+    blockchain_sql = Table("blockchain","number","hash","previous","tran","nonce")
+    for b in blockchain_sql.get_all():
+        blockchain.add_block(Block(int(b.get('number')),b.get('previous'), b.get('tran'),int(b.get('nonce'))))
+    
+    return blockchain
+
+def sync_jinxchain(blockchain):
+    blockchain_sql = Table("blockchain", "number", "hash", "previous", "tran", "nonce")
+    blockchain_sql.delete_all()
+
+    for block in blockchain.chain:
+        blockchain_sql.insert(str(block.number), block.hash(), block.previous_hash, block.tran, block.nonce)
+
+
+    
