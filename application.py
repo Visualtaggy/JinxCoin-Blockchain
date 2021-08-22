@@ -15,16 +15,37 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 
+def login_user(username):
+    pass
+
 @app.route("/sign-up", methods=['GET', 'POST'])
 def register():
     form = SignupForm(request.form)
     users = Table("users", "name", "email", "username", "password")
 
-    if request.method == 'POST' and form.validate():
-        pass
 
+    if request.method == 'POST' and form.validate():
+       
+        username = form.username.data
+        email = form.email.data
+        name = form.name.data
+
+       
+        if True:
+            
+            password = sha256_crypt.encrypt(form.password.data)
+            users.insert(name,email,username,password)
+            login_user(username)
+            return redirect(url_for('dashboard'))
+        else:
+            flash('User already exists', 'danger')
+            return redirect(url_for('register'))
     return render_template('signup.html', form=form)
 
+
+@app.route("/dashboard")
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route("/")
 def index():
