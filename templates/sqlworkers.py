@@ -69,3 +69,12 @@ def check_newtable(table_name):
     except:
         return True
     return False
+
+def isnewuser(username):
+
+    users = Table("users", "name", "email", "username", "password")
+    data = users.get_all()
+    usernames = [user.get('username') for user in data]
+
+    return False if username in usernames else True
+
