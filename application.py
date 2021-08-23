@@ -4,6 +4,7 @@ from flask_mysqldb import MySQL
 from password import sqlpassword
 from templates.sqlworkers import *
 from templates.forms import *
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -12,7 +13,18 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = sqlpassword
 app.config['MYSQL_DB'] = 'crypto'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
 mysql = MySQL(app)
+
+def is_user_loggedin(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash("Please login","danger")
+            return redirect(url_for("login"))
+    return wrap
 
 
 def login_user(username):
@@ -76,12 +88,14 @@ def login():
 
 
 @app.route("/logout")
+@is_user_loggedin
 def logout():
     session.clear()
     flash("Logout success","success")
     return redirect(url_for('login'))
 
 @app.route("/dashboard")
+@is_user_loggedin
 def dashboard():
     return render_template('dashboard.html',session=session)
 
