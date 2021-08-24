@@ -107,7 +107,13 @@ def transaction():
     balance =  get_balance(session.get('username'))
 
     if request.method == 'POST':
-        pass
+        try:
+            send_money(session.get('username'),form.username.data,form.amount.data)
+            flash("Money sent!","success")
+        except Exception as e:
+            flash(str(e),"danger")
+
+        return redirect(url_for('transaction'))
 
     return render_template('transaction.html',balance=balance,form=form)
 
