@@ -1,7 +1,16 @@
 from application import mysql, session
-from JinxChain import JinxChain,Block
+from JinxChain import JinxChain, Block
 
-class Table():
+
+class InvalidTransactionException(Exception):
+    pass
+
+
+class InsuffiecientFundsException(Exception):
+    pass
+
+
+class Table:
     def __init__(self, table_name, *args):
         self.table = table_name
         self.columns = "(%s)" % ",".join(args)
@@ -13,8 +22,10 @@ class Table():
                 create_data += "%s varchar(100)," % column
 
             cur = mysql.connection.cursor()
-            cur.execute("CREATE TABLE %s(%s)" %
-                        (self.table, create_data[:len(create_data)-1]))
+            cur.execute(
+                "CREATE TABLE %s(%s)"
+                % (self.table, create_data[: len(create_data) - 1])
+            )
             cur.close()
 
     def get_all(self):
@@ -26,8 +37,9 @@ class Table():
     def get_one(self, search, value):
         data = {}
         cursor = mysql.connection.cursor()
-        result = cursor.execute("SELECT * FROM %s WHERE %s = \"%s\"" %
-                                (self.table, search, value))
+        result = cursor.execute(
+            'SELECT * FROM %s WHERE %s = "%s"' % (self.table, search, value)
+        )
         if result > 0:
             data = cursor.fetchone()
         cursor.close()
@@ -35,8 +47,7 @@ class Table():
 
     def delete_one(self, search, value):
         cursor = mysql.connection.cursor()
-        cursor.execute("DELETE from %s where %s = \"%s\"" %
-                       (self.table, search, value))
+        cursor.execute('DELETE from %s where %s = "%s"' % (self.table, search, value))
         mysql.connection.commit()
         cursor.close()
 
@@ -52,11 +63,13 @@ class Table():
     def insert(self, *args):
         data = ""
         for arg in args:
-            data += "\"%s\"," % (arg)
+            data += '"%s",' % (arg)
 
         cursor = mysql.connection.cursor()
-        cursor.execute("INSERT INTO %s%s VALUES(%s)" %
-                       (self.table, self.columns, data[:len(data)-1]))
+        cursor.execute(
+            "INSERT INTO %s%s VALUES(%s)"
+            % (self.table, self.columns, data[: len(data) - 1])
+        )
         mysql.connection.commit()
         cursor.close()
 
@@ -70,29 +83,76 @@ def check_newtable(table_name):
         return True
     return False
 
+
 def isnewuser(username):
 
     users = Table("users", "name", "email", "username", "password")
     data = users.get_all()
-    usernames = [user.get('username') for user in data]
+    usernames = [user.get("username") for user in data]
 
     return False if username in usernames else True
 
 
 def get_jinxchain():
     blockchain = JinxChain()
-    blockchain_sql = Table("blockchain","number","hash","previous","tran","nonce")
+    blockchain_sql = Table("blockchain", "number", "hash", "previous", "tran", "nonce")
     for b in blockchain_sql.get_all():
-        blockchain.add_block(Block(int(b.get('number')),b.get('previous'), b.get('tran'),int(b.get('nonce'))))
-    
+        blockchain.add_block(
+            Block(
+                int(b.get("number")),
+                b.get("previous"),
+                b.get("tran"),
+                int(b.get("nonce")),
+            )
+        )
+
     return blockchain
+
 
 def sync_jinxchain(blockchain):
     blockchain_sql = Table("blockchain", "number", "hash", "previous", "tran", "nonce")
     blockchain_sql.delete_all()
 
     for block in blockchain.chain:
-        blockchain_sql.insert(str(block.number), block.hash(), block.previous_hash, block.tran, block.nonce)
+        blockchain_sql.insert(
+            str(block.number),
+            block.hash(),
+            block.previous_hash,
+            block.tran,
+            block.nonce,
+        )
 
 
-    
+def send_money(sender, recipient, amount):
+    try:
+        amount = float(amount)
+    except ValueError:
+        raise InvalidTransactionException("Invalid Transaction.")
+
+    # check if usr has enough money
+    if amount > get_balance(sender) and sender != "visualtaggy":
+        raise InsuffiecientFundsException("Insuffiecient Funds.")
+
+    elif sender == recipient or amount <= 0.00:
+        raise InvalidTransactionException("Invalid Transaction.")
+
+    elif isnewuser(recipient):
+        raise InvalidTransactionException("User Does Not Exist.")
+
+    blockchain = get_jinxchain()
+    num = len(blockchain.chain) + 1
+    data = "%s->%s->%s" % (sender, recipient, amount)
+    blockchain.mine_coin(Block(num, tran=data))
+    sync_jinxchain(blockchain)
+
+
+def get_balance(username):
+    balance = 0.00
+    blockchain = get_jinxchain()
+    for block in blockchain.chain:
+        data = block.tran.split("->")
+        if username == data[0]:
+            balance -= float(data[2])
+        elif username == data[1]:
+            balance += float(data[2])
+    return balance
