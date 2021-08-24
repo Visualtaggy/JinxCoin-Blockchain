@@ -11,3 +11,9 @@ class SignupForm(Form):
     password = PasswordField(
         'Password', [validators.DataRequired(), validators.EqualTo('confirm', message="Passwords do not match")])
     confirm = PasswordField('Confirm Password')
+
+class SendMoneyForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    amount = StringField('Amount', [validators.Length(min=1, max=50)])
+
+    

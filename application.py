@@ -99,6 +99,18 @@ def logout():
 def dashboard():
     return render_template('dashboard.html',session=session)
 
+
+@app.route("/transaction", methods = ['GET','POST'])
+@is_user_loggedin
+def transaction():
+    form = SendMoneyForm(request.form)
+    balance =  get_balance(session.get('username'))
+
+    if request.method == 'POST':
+        pass
+
+    return render_template('transaction.html',balance=balance,form=form)
+
 @app.route("/")
 def index():
     return render_template('index.html')
