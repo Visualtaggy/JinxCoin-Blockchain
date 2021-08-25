@@ -61,30 +61,30 @@ def register():
             return redirect(url_for('register'))
     return render_template('signup.html', form=form)
 
-@app.route("/login",methods = ['GET','POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        candidate = request.form['password']
+# @app.route("/login",methods = ['GET','POST'])
+# def login():
+#     if request.method == 'POST':
+#         username = request.form['username']
+#         candidate = request.form['password']
 
-        users = Table("users", "name", "email", "username", "password")
-        user = users.get_one("username",username)
-        actual_pass = user.get('password')
+#         users = Table("users", "name", "email", "username", "password")
+#         user = users.get_one("username",username)
+#         actual_pass = user.get('password')
 
-        if actual_pass is None:
-            flash('Username is not found','danger')
-            return redirect(url_for('login'))
-        else:
-            if sha256_crypt.verify(candidate,actual_pass):
-                login_user(username)
-                flash('You are now logged in','success')
-                return redirect(url_for('dashboard'))
-            else:
-                flash("Invalid password",'danger')
-                return redirect(url_for('login'))
+#         if actual_pass is None:
+#             flash('Username is not found','danger')
+#             return redirect(url_for('login'))
+#         else:
+#             if sha256_crypt.verify(candidate,actual_pass):
+#                 login_user(username)
+#                 flash('You are now logged in','success')
+#                 return redirect(url_for('dashboard'))
+#             else:
+#                 flash("Invalid password",'danger')
+#                 return redirect(url_for('login'))
 
 
-    return render_template('login.html')
+#     return render_template('login.html')
 
 
 @app.route("/logout")
@@ -92,7 +92,7 @@ def login():
 def logout():
     session.clear()
     flash("Logout success","success")
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route("/dashboard")
 @is_user_loggedin
@@ -117,8 +117,27 @@ def transaction():
 
     return render_template('transaction.html',balance=balance,form=form)
 
-@app.route("/")
+@app.route("/",methods = ['GET','POST'])
 def index():
+    if request.method == 'POST':
+        username = request.form['username']
+        candidate = request.form['password']
+
+        users = Table("users", "name", "email", "username", "password")
+        user = users.get_one("username",username)
+        actual_pass = user.get('password')
+
+        if actual_pass is None:
+            flash('Username is not found','danger')
+        else:
+            if sha256_crypt.verify(candidate,actual_pass):
+                login_user(username)
+                flash('You are now logged in','success')
+                return redirect(url_for('dashboard'))
+            else:
+                flash("Invalid password",'danger')
+
+  
     return render_template('index.html')
 
 
