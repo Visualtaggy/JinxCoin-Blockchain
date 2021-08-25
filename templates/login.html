@@ -5,13 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jinx Login</title>
+    <script
+      src="https://kit.fontawesome.com/64d58efce2.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='style.css')}}"
+    />
   </head>
   <body>
+    <h2 class="title">Login</h2>
     <div class="container">
       {% include 'includes/_messages.html' %}
       <form action="" method="POST">
         <div class="form-group">
           <div class="form-label-group">
+            <i class="fas fa-user"></i>
             <input
               type="text"
               id="inputUsername"
@@ -28,6 +39,7 @@
 
         <div class="form-group">
           <div class="form-label-group">
+            <i class="fas fa-lock"></i>
             <input
               type="password"
               id="inputPassword"
