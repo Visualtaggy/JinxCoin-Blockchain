@@ -53,7 +53,96 @@
               <!-- <label for="inputPassword">Password</label> -->
             </div>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Login</button>
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            value="login"
+            name="login"
+          >
+            Login
+          </button>
+        </form>
+
+        <form method="POST" action="">
+          <h2 class="title">Sign Up</h2>
+          <div class="input-field">
+            <i class="fas fa-user-circle"></i>
+            <input
+              type="text"
+              id="inputName"
+              name="name"
+              class="form-control"
+              placeholder="Full Name"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.name}}"
+            />
+            <!-- <label for="inputName">Full Name</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-user"></i>
+            <input
+              type="text"
+              id="inputUsername"
+              name="username"
+              class="form-control"
+              placeholder="Username"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.username}}"
+            />
+            <!-- <label for="inputUserName">Username</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-envelope"></i>
+            <input
+              type="text"
+              id="inputEmail"
+              name="email"
+              class="form-control"
+              placeholder="Email"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.email}}"
+            />
+            <!-- <label for="inputEmail">Email address</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="inputPasword"
+              name="password"
+              class="form-control"
+              placeholder="Password"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.password}}"
+            />
+            <!-- <label for="inputPassword">Password</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="confirmPasword"
+              name="confirm"
+              class="form-control"
+              placeholder="Confirm Password"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.confirm}}"
+            />
+            <!-- <label for="confirmPassword">Confirm Password</label> -->
+          </div>
+          <button
+            type="submit"
+            class="btn btn-primary btn-block"
+            value="signup"
+            name="signup"
+          >
+            SignUp
+          </button>
         </form>
       </div>
     </div>

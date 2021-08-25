@@ -23,7 +23,7 @@ def is_user_loggedin(f):
             return f(*args, **kwargs)
         else:
             flash("Please login","danger")
-            return redirect(url_for("login"))
+            return redirect(url_for("index"))
     return wrap
 
 
@@ -35,57 +35,6 @@ def login_user(username):
     session['username'] = username
     session['name'] = user.get('name')
     session['email'] = user.get('email')
-
-
-@app.route("/sign-up", methods=['GET', 'POST'])
-def register():
-    form = SignupForm(request.form)
-    users = Table("users", "name", "email", "username", "password")
-
-
-    if request.method == 'POST' and form.validate():
-       
-        username = form.username.data
-        email = form.email.data
-        name = form.name.data
-
-       
-        if isnewuser(username):
-            
-            password = sha256_crypt.encrypt(form.password.data)
-            users.insert(name,email,username,password)
-            login_user(username)
-            return redirect(url_for('dashboard'))
-        else:
-            flash('User already exists', 'danger')
-            return redirect(url_for('register'))
-    return render_template('signup.html', form=form)
-
-# @app.route("/login",methods = ['GET','POST'])
-# def login():
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         candidate = request.form['password']
-
-#         users = Table("users", "name", "email", "username", "password")
-#         user = users.get_one("username",username)
-#         actual_pass = user.get('password')
-
-#         if actual_pass is None:
-#             flash('Username is not found','danger')
-#             return redirect(url_for('login'))
-#         else:
-#             if sha256_crypt.verify(candidate,actual_pass):
-#                 login_user(username)
-#                 flash('You are now logged in','success')
-#                 return redirect(url_for('dashboard'))
-#             else:
-#                 flash("Invalid password",'danger')
-#                 return redirect(url_for('login'))
-
-
-#     return render_template('login.html')
-
 
 @app.route("/logout")
 @is_user_loggedin
@@ -120,26 +69,46 @@ def transaction():
 @app.route("/",methods = ['GET','POST'])
 def index():
     if request.method == 'POST':
-        username = request.form['username']
-        candidate = request.form['password']
 
-        users = Table("users", "name", "email", "username", "password")
-        user = users.get_one("username",username)
-        actual_pass = user.get('password')
+        if request.form.get('login') == 'login':
+            username = request.form['username']
+            candidate = request.form['password']
 
-        if actual_pass is None:
-            flash('Username is not found','danger')
-        else:
-            if sha256_crypt.verify(candidate,actual_pass):
-                login_user(username)
-                flash('You are now logged in','success')
-                return redirect(url_for('dashboard'))
+            users = Table("users", "name", "email", "username", "password")
+            user = users.get_one("username",username)
+            actual_pass = user.get('password')
+
+            if actual_pass is None:
+                flash('Username is not found','danger')
             else:
-                flash("Invalid password",'danger')
+                if sha256_crypt.verify(candidate,actual_pass):
+                    login_user(username)
+                    flash('You are now logged in','success')
+                    return redirect(url_for('dashboard'))
+                else:
+                    flash("Invalid password",'danger')
 
-  
+        elif  request.form.get('signup') == 'signup':
+            form = SignupForm(request.form)
+            users = Table("users", "name", "email", "username", "password")
+
+            if request.method == 'POST' and form.validate():
+                username = form.username.data
+                email = form.email.data
+                name = form.name.data 
+
+                if isnewuser(username):
+                    password = sha256_crypt.encrypt(form.password.data)
+                    users.insert(name,email,username,password)
+                    login_user(username)
+                    return redirect(url_for('dashboard'))                                    
+
+                else:
+                    flash('User already exists', 'danger')
+                    return redirect(url_for('index'))
+
     return render_template('index.html')
-
+    #return render_template('signup.html', form=form)
 
 if __name__ == '__main__':
     app.secret_key = 'secret123'
