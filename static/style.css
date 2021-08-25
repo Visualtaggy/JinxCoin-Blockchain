@@ -204,15 +204,16 @@ form.log-in-form {
   transform: translateX(-800px);
 }
 
-.container.sign-up-mode .signin-signup {
+.container.sign-up-mode .login-signup {
   left: 25%;
 }
+
 .container.sign-up-mode form.sign-up-form {
   opacity: 1;
   z-index: 2;
 }
 
-.container.sign-up-mode form.sign-in-form {
+.container.sign-up-mode form.log-in-form {
   opacity: 0;
   z-index: 1;
 }
