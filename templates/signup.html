@@ -5,77 +5,96 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up</title>
+    <script
+      src="https://kit.fontawesome.com/64d58efce2.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static',filename='style.css')}}"
+    />
   </head>
   <body>
     <div class="container">
-      <form method="POST" action="">
-        <div class="form-label group">
-          <input
-            type="text"
-            id="inputName"
-            name="name"
-            class="form-control"
-            placeholder="Full Name"
-            required="required"
-            autofocus="autofocus"
-            value="{{request.form.name}}"
-          />
-          <label for="inputName">Full Name</label>
-        </div>
-        <div class="form-label group">
-          <input
-            type="text"
-            id="inputUsername"
-            name="username"
-            class="form-control"
-            placeholder="Username"
-            required="required"
-            autofocus="autofocus"
-            value="{{request.form.username}}"
-          />
-          <label for="inputUserName">Username</label>
-        </div>
-        <div class="form-label group">
-          <input
-            type="text"
-            id="inputEmail"
-            name="email"
-            class="form-control"
-            placeholder="Email"
-            required="required"
-            autofocus="autofocus"
-            value="{{request.form.email}}"
-          />
-          <label for="inputEmail">Email address</label>
-        </div>
-        <div class="form-label group">
-          <input
-            type="password"
-            id="inputPasword"
-            name="password"
-            class="form-control"
-            placeholder="Password"
-            required="required"
-            autofocus="autofocus"
-            value="{{request.form.password}}"
-          />
-          <label for="inputPassword">Password</label>
-        </div>
-        <div class="form-label group">
-          <input
-            type="password"
-            id="confirmPasword"
-            name="confirm"
-            class="form-control"
-            placeholder="Confirm Password"
-            required="required"
-            autofocus="autofocus"
-            value="{{request.form.confirm}}"
-          />
-          <label for="confirmPassword">Confirm Password</label>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">SignUp</button>
-      </form>
+      <div class="forms-container">
+        <form method="POST" action="">
+          <h2 class="title">Sign Up</h2>
+          <div class="input-field">
+            <i class="fas fa-user-circle"></i>
+            <input
+              type="text"
+              id="inputName"
+              name="name"
+              class="form-control"
+              placeholder="Full Name"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.name}}"
+            />
+            <!-- <label for="inputName">Full Name</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-user"></i>
+            <input
+              type="text"
+              id="inputUsername"
+              name="username"
+              class="form-control"
+              placeholder="Username"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.username}}"
+            />
+            <!-- <label for="inputUserName">Username</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-envelope"></i>
+            <input
+              type="text"
+              id="inputEmail"
+              name="email"
+              class="form-control"
+              placeholder="Email"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.email}}"
+            />
+            <!-- <label for="inputEmail">Email address</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="inputPasword"
+              name="password"
+              class="form-control"
+              placeholder="Password"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.password}}"
+            />
+            <!-- <label for="inputPassword">Password</label> -->
+          </div>
+          <div class="input-field">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="confirmPasword"
+              name="confirm"
+              class="form-control"
+              placeholder="Confirm Password"
+              required="required"
+              autofocus="autofocus"
+              value="{{request.form.confirm}}"
+            />
+            <!-- <label for="confirmPassword">Confirm Password</label> -->
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            SignUp
+          </button>
+        </form>
+      </div>
     </div>
   </body>
 </html>
